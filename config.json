@@ -1,0 +1,11 @@
+{
+    "email": "",
+    "password":"",
+    "max":"45",
+    "min":"15",
+    "timings":[
+        {"hour":0, "minute":25},
+        {"hour":0, "minute":26},
+        {"hour":0, "minute":27}
+    ]
+}
