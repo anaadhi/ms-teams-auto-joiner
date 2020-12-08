@@ -41,28 +41,30 @@ const user = require('./config.json');
           // open participants
           await driver.wait(until.elementLocated(By.id('roster-button')), 12000).click()
 
-          await sleep(1000)
-
-
+          // while number of people in meeting is more than n
           x = user.max;
-          while (x > 5){
-            try{
-              y = await driver.wait(until.elementLocated(By.className('badge badge-over-icon')), 12000).getText()
-              y = Number(y)
-            }catch(e){console.log("no such element")}
-            
-            x = await driver.wait(until.elementLocated(By.xpath('\/\/*[@id="page-content-wrapper"]/div[1]/div/calling-screen/div/div[2]/meeting-panel-components/calling-roster/div/div[2]/div/div[1]/accordion/div/accordion-section[2]/div/calling-roster-section/div/div[1]/button/span[3]')), 12000).getText()
-            x = Number(x.replace(/\D/g,''));
-            await sleep(10000)
-            if(x < user.min){
-              console.log("leave")
-			  await driver.wait(until.elementLocated(By.id('app-bar-ef56c0de-36fc-4ef8-b417-3d82ba9d073c')), 12000).click()
-			  await sleep(2000)
-              await driver.wait(until.elementLocated(By.id('hangup-button')), 12000).click()
-            }
-            console.log(x + " participants")
-            console.log(y + " hands raised")
+          while (x > user.min){
+            // get number of hands raised
+                try{
+                  y = await driver.wait(until.elementLocated(By.className('badge badge-over-icon')), 12000).getText()
+                  y = Number(y)
+                }catch(e){console.log("no such element")}
+                
+                await sleep(5000)
+              
+                console.log(x + " participants")
+                console.log(y + " hands raised")
+              
+                // get number of people in meeting
+                x = await driver.wait(until.elementLocated(By.xpath('\/\/*[@id="page-content-wrapper"]/div[1]/div/calling-screen/div/div[2]/    meeting-panel-components/calling-roster/div/div[2]/div/div[1]/accordion/div/accordion-section[2]/div/calling-roster-section/div/div[1]/   button/span[3]')), 12000).getText()
+                x = Number(x.replace(/\D/g,''));
           }
+
+          // leave meeting 
+            console.log("leave")
+			      await driver.wait(until.elementLocated(By.id('app-bar-ef56c0de-36fc-4ef8-b417-3d82ba9d073c')), 12000).click()
+			      await sleep(2000)
+            await driver.wait(until.elementLocated(By.id('hangup-button')), 12000).click()
         });
 
 })();
