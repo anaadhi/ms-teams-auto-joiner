@@ -1,6 +1,6 @@
 # ms-teams-auto-joiner
 
-ms-teams-auto-joiner joins teams meetings at the given times and automatically leaves then when the number of attendees is below a certain number
+ms-teams-auto-joiner joins teams meetings at the given times and automatically leaves when the number of attendees is below a certain number
 
 
 
