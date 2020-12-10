@@ -2,6 +2,7 @@ const {Builder, By, Key, until} = require('selenium-webdriver');
 const schedule = require('node-schedule');
 
 const user = require('./config.json');
+const length = user.timings.length
 
 (async function example() {
     let driver = await new Builder().setChromeOptions('profile.default_content_setting_values.media_stream_mic: 1').forBrowser('chrome').build();
@@ -21,15 +22,10 @@ const user = require('./config.json');
         await driver.wait(until.elementLocated(By.name('Work week')), 5000).click()
         await sleep(3000)
         await driver.wait(until.elementLocated(By.name('Day')), 12000).click()
-
-
-
-
-
-        schedule.scheduleJob({hour: 12, minute: 18},async () => {
-          meeting()
-        });
-        schedule.scheduleJob({hour: 13, minute: 22},async () => {
+        i = 0;
+        job()
+      function job(){
+        schedule.scheduleJob({hour: user.timings[i].hour, minute: user.timings[i].minute},async () => {
           console.log('Job runs every day at 5:30AM');
 
           // join meeting
@@ -48,12 +44,12 @@ const user = require('./config.json');
                 try{
                   y = await driver.wait(until.elementLocated(By.className('badge badge-over-icon')), 12000).getText()
                   y = Number(y)
+                  console.log(y + " hands raised")
                 }catch(e){console.log("no such element")}
                 
                 await sleep(5000)
               
                 console.log(x + " participants")
-                console.log(y + " hands raised")
               
                 // get number of people in meeting
                 x = await driver.wait(until.elementLocated(By.xpath('\/\/*[@id="page-content-wrapper"]/div[1]/div/calling-screen/div/div[2]/    meeting-panel-components/calling-roster/div/div[2]/div/div[1]/accordion/div/accordion-section[2]/div/calling-roster-section/div/div[1]/   button/span[3]')), 12000).getText()
@@ -65,8 +61,14 @@ const user = require('./config.json');
 			      await driver.wait(until.elementLocated(By.id('app-bar-ef56c0de-36fc-4ef8-b417-3d82ba9d073c')), 12000).click()
 			      await sleep(2000)
             await driver.wait(until.elementLocated(By.id('hangup-button')), 12000).click()
-        });
 
+            // change i and restart function
+            i += 1
+            if (i<length){
+                job()
+            }
+        });
+      }
 })();
 
 function sleep(ms) {
