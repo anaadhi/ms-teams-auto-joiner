@@ -2,7 +2,7 @@ const {Builder, By, Key, until} = require('selenium-webdriver');
 const schedule = require('node-schedule');
 
 const user = require('./config.json');
-const length = user.timings.length
+const length = user.timings.length;
 
 (async function example() {
     let driver = await new Builder().setChromeOptions('profile.default_content_setting_values.media_stream_mic: 1').forBrowser('chrome').build();
